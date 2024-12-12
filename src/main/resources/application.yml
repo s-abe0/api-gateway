@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: client_A
+          uri: http://localhost:8081
+          predicates:
+            - Path=/test
+          filters:
+            - PrefixPath=/api
+        - id: client_B
+          uri: http://localhost:8082
+          predicates:
+            - Path=/hello-world
+          filters:
+            - PrefixPath=/api
+          
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+
+server:
+  port: 8080
+  eureka:
+    instance:
+      preferIpAddress: true
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "api-gateway"
+    description: "API Gateway server"
+    version: "1.0.0"
